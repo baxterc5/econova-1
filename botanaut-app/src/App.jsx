@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import './theme.css';
 import Landing from './pages/Landing';
 import Home from './pages/Home';
-import About from './pages/About';
+import Ecoswap from './pages/Ecoswap';
 import Planet from './pages/Planet';
 import Navbar from './components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
