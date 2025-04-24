@@ -10,10 +10,10 @@ export default function Search() {
     if (!query.trim()) return;
     setLoading(true);
     try {
-      const res = await fetch(`https://www.lcacommons.gov/api/v1/search?query=${encodeURIComponent(query)}`);
+      const res = await fetch(`/api/lca/search?query=${encodeURIComponent(query)}`);
       const data = await res.json();
       setResults(data.results || []);
-      setSelectedDetails(null); // reset detailed view when new search starts
+      setSelectedDetails(null); // reset detailed view on new search
     } catch (error) {
       console.error('Search failed:', error);
     }
@@ -22,8 +22,9 @@ export default function Search() {
 
   const fetchDetails = async (id) => {
     try {
-      const res = await fetch(`https://www.lcacommons.gov/api/v1/entity/${id}`);
+      const res = await fetch(`/api/lca/entity/${id}`);
       const data = await res.json();
+      console.log("Impact details:", data); // optional: view in browser console
       setSelectedDetails(data);
     } catch (error) {
       console.error("Failed to fetch details", error);
