@@ -1,4 +1,4 @@
-import EcoSwapSearch from '../components/EcoSwapSearch';
+import EcoSwapSearch from '../components/Ecoswap';
 
 export default function Ecoswap() {
   return (
