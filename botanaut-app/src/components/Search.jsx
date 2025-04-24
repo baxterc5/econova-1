@@ -4,6 +4,7 @@ export default function Search() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [selectedDetails, setSelectedDetails] = useState(null);
 
   const handleSearch = async () => {
     if (!query.trim()) return;
@@ -12,10 +13,21 @@ export default function Search() {
       const res = await fetch(`https://www.lcacommons.gov/api/v1/search?query=${encodeURIComponent(query)}`);
       const data = await res.json();
       setResults(data.results || []);
+      setSelectedDetails(null); // reset detailed view when new search starts
     } catch (error) {
       console.error('Search failed:', error);
     }
     setLoading(false);
+  };
+
+  const fetchDetails = async (id) => {
+    try {
+      const res = await fetch(`https://www.lcacommons.gov/api/v1/entity/${id}`);
+      const data = await res.json();
+      setSelectedDetails(data);
+    } catch (error) {
+      console.error("Failed to fetch details", error);
+    }
   };
 
   return (
@@ -63,9 +75,24 @@ export default function Search() {
             border: '1px solid var(--brand-primary)',
             color: 'white',
           }}>
-            <h3 style={{ marginBottom: '0.5rem' }}>{item.name}</h3>
-            <p style={{ fontStyle: 'italic' }}>{item.description || 'No description available.'}</p>
-            {/* Optional future "View Details" button goes here */}
+            <h3>{item.name}</h3>
+            <p>{item.description || 'No description available.'}</p>
+            <button
+              onClick={() => fetchDetails(item.id)}
+              style={{
+                marginTop: '0.5rem',
+                padding: '0.4rem 1rem',
+                borderRadius: '6px',
+                backgroundColor: 'white',
+                color: 'var(--brand-primary)',
+                fontWeight: 'bold',
+                border: 'none',
+                cursor: 'pointer',
+                fontFamily: 'SpaceMono',
+              }}
+            >
+              View Impact
+            </button>
           </div>
         ))}
 
@@ -73,6 +100,30 @@ export default function Search() {
           <p style={{ marginTop: '2rem' }}>No results found for "{query}". Try another product.</p>
         )}
       </div>
+
+      {selectedDetails && (
+        <div style={{
+          marginTop: '2rem',
+          padding: '1.5rem',
+          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+          borderRadius: '12px',
+          border: '1px solid #888',
+          color: 'white'
+        }}>
+          <h3>Environmental Impact: {selectedDetails.name}</h3>
+          {selectedDetails.impactCategories?.length ? (
+            <ul style={{ marginTop: '1rem' }}>
+              {selectedDetails.impactCategories.map((cat, i) => (
+                <li key={i} style={{ marginBottom: '0.5rem' }}>
+                  <strong>{cat.name}:</strong> {cat.value} {cat.unit}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No environmental impact data available for this item.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }
