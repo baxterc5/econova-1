@@ -17,7 +17,7 @@ function AppLayout() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/about" element={<Ecoswap />} />
+        <Route path="/ecoswap" element={<Ecoswap />} />
         <Route path="/planet" element={<Planet />} />
       </Routes>
     </>
